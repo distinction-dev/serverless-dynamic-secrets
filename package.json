@@ -1,5 +1,5 @@
 {
-  "name": "serverless-dynamic-secrets",
+  "name": "@distinction-dev/serverless-dynamic-secrets",
   "version": "1.0.0",
   "main": "index.js",
   "description": "A Serverless Framework plugin for dynamic parameter and secret creation",
@@ -8,11 +8,6 @@
     "lint": "eslint .",
     "semantic-release": "semantic-release"
   },
-  "files": [
-    "index.js",
-    "package.json",
-    "README.md"
-  ],
   "keywords": [
     "serverless",
     "plugin",
@@ -23,11 +18,13 @@
     "type": "git",
     "url": "https://github.com/distinction-dev/serverless-dynamic-secrets.git"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "author": "Sid2601",
   "license": "MIT",
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
   "dependencies": {
     "yargs-parser": "^21.1.1"
   },
