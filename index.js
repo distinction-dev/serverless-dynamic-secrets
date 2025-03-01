@@ -14,7 +14,7 @@ module.exports = class CfParametersPlugin {
                 options: {
                     [OPTION_PARAMETER_FILE]: {
                         usage: 'Provide a JSON file to define secrets and parameters',
-                        required: true,
+                        required: false,
                         type: 'string'
                     },
                     [OPTION_PARAMETER_OVERRIDES]: {
@@ -43,9 +43,14 @@ module.exports = class CfParametersPlugin {
     }
 
     addSecretsAndParameters() {
-        const parameterFile = this.options[OPTION_PARAMETER_FILE];
+        let parameterFile = this.options[OPTION_PARAMETER_FILE];
+
         if (!parameterFile) {
-            throw new Error("The --parameter-file option is required to define secrets and parameters.");
+            parameterFile = this.serverless.service.custom?.dynamicSecretsConfig?.parameterFile;
+        }
+
+        if (!parameterFile) {
+            throw new Error("❌ Parameter file is missing! Please provide it via CLI (--parameter-file <file>) or define it in serverless.yml under 'custom.dynamicSecretsConfig.parameterFile'.");
         }
 
         const secretsData = JSON.parse(fs.readFileSync(parameterFile, 'utf-8'));
@@ -172,9 +177,10 @@ module.exports = class CfParametersPlugin {
         );
         // console.log("Parameter Overrides from CLI:", JSON.stringify(cliOverrides));
 
-        const fileOverrides = this.options[OPTION_PARAMETER_FILE]
-            ? JSON.parse(fs.readFileSync(this.options[OPTION_PARAMETER_FILE], 'utf-8'))
-            : {};
+        let parameterFile = this.options[OPTION_PARAMETER_FILE] || this.serverless.service.custom?.dynamicSecretsConfig?.parameterFile;
+        const fileOverrides = parameterFile
+        ? JSON.parse(fs.readFileSync(parameterFile, 'utf-8'))
+        : {};
 
         // console.log("Parameter Overrides from File:", JSON.stringify(fileOverrides));
 
